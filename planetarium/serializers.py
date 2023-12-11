@@ -55,6 +55,17 @@ class ShowSessionListSerializer(ShowSessionSerializer):
         read_only=True,
         slug_field="name"
     )
+    tickets_available = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = ShowSession
+        fields = (
+            "id",
+            "astronomy_show",
+            "planetarium_dome",
+            "tickets_available",
+            "show_time"
+        )
 
 
 class TicketSerializer(serializers.ModelSerializer):
