@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     # third-party
     "rest_framework",
     "rest_framework_simplejwt",
+    "drf_spectacular",
 
     # custom
     "planetarium",
@@ -127,7 +128,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "user.User"
 
 REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Cinema API Service",
+    "DESCRIPTION": "API for managing cinema",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "defaultModelRendering": "model",
+        "defaultModelsExpandDepth": 2,
+        "defaultModelExpandDepth": 2,
+    },
 }
