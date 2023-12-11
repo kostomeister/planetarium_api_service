@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
 
@@ -81,6 +83,25 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
     queryset = ShowSession.objects.select_related("astronomy_show", "planetarium_dome")
     serializer_class = ShowSessionSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly, )
+
+    def get_queryset(self):
+        date = self.request.query_params.get("title")
+        astronomy_show = self.request.query_params.get("show_theme")
+        planetarium_dome = self.request.query_params.get("planetarium_dome")
+
+        queryset = self.queryset
+
+        if date:
+            date = datetime.strptime(date, "%Y-%m-%d").date()
+            queryset = queryset.filter(show_time__date=date)
+
+        if astronomy_show:
+            queryset = queryset.filter(astronomy_show__id=astronomy_show)
+
+        if planetarium_dome:
+            queryset = queryset.filter(planetarium_dome__id=planetarium_dome)
+
+        return queryset.distinct()
 
     def get_serializer_class(self):
         if self.action == "list":
