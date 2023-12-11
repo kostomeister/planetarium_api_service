@@ -82,6 +82,10 @@ class Ticket(models.Model):
         related_name="tickets"
     )
 
+    class Meta:
+        unique_together = ("show_session", "row", "seat")
+        ordering = ["row", "seat"]
+
     @staticmethod
     def validate_ticket(row, seat, planetarium_dome, error_to_raise):
         for ticket_attr_value, ticket_attr_name, planetarium_dome_attr_name in [
