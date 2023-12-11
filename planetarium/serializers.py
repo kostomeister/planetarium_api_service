@@ -92,3 +92,16 @@ class ShowSessionDetailSerializer(ShowSessionSerializer):
         many=False,
         read_only=True,
     )
+    taken_places = TicketSeatsSerializer(
+        source="tickets", many=True, read_only=True
+    )
+
+    class Meta:
+        model = ShowSession
+        fields = (
+            "id",
+            "astronomy_show",
+            "planetarium_dome",
+            "show_time",
+            "taken_places"
+        )
