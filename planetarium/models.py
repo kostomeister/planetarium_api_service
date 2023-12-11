@@ -61,6 +61,9 @@ class ShowSession(models.Model):
     )
     show_time = models.DateTimeField()
 
+    class Meta:
+        ordering = ["-show_time"]
+
     @property
     def tickets_available(self):
         return self.planetarium_dome.capacity - self.tickets.count()
