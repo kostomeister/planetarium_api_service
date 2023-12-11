@@ -48,6 +48,25 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
     serializer_class = AstronomyShowSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly, )
 
+    @staticmethod
+    def _params_to_ints(qs):
+        return [int(str_id) for str_id in qs.split(",")]
+
+    def get_queryset(self):
+        title = self.request.query_params.get("title")
+        show_themes = self.request.query_params.get("show_theme")
+
+        queryset = self.queryset
+
+        if title:
+            queryset = queryset.filter(title__icontains=title)
+
+        if show_themes:
+            show_themes_ids = self._params_to_ints(show_themes)
+            queryset = queryset.filter(show_theme__id__in=show_themes_ids)
+
+        return queryset.distinct()
+
     def get_serializer_class(self):
         if self.action == "list":
             return AstronomyShowListSerializer
