@@ -43,6 +43,9 @@ class Reservation(models.Model):
         get_user_model(), on_delete=models.CASCADE
     )
 
+    class Meta:
+        ordering = [-"created_at"]
+
     def __str__(self):
         return (f"Reservation by {self.user.name}"
                 f" created at {self.created_at}")
@@ -89,7 +92,7 @@ class Ticket(models.Model):
     )
 
     class Meta:
-        unique_together = ("show_session", "row", "seat")
+        unique_together = ["show_session", "row", "seat"]
         ordering = ["row", "seat"]
 
     @staticmethod
