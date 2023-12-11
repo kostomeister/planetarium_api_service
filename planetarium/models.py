@@ -30,6 +30,9 @@ class AstronomyShow(models.Model):
         ShowTheme, related_name="astronomy_shows"
     )
 
+    class Meta:
+        ordering = ["title"]
+
     def __str__(self):
         return self.title
 
