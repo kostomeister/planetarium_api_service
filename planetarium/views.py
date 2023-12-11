@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
 
@@ -78,6 +79,24 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
 
         return AstronomyShowSerializer
 
+    # only for documentation
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "show_themes",
+                type={"type": "list", "items": {"type": "number"}},
+                description="Filter by show theme id(ex. ?show_theme=3,5)"
+            ),
+            OpenApiParameter(
+                "title",
+                type=str,
+                description="Filter by title (ex. ?title=AstronomyShow Title)",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
 
 class ShowSessionViewSet(viewsets.ModelViewSet):
     queryset = ShowSession.objects.select_related("astronomy_show", "planetarium_dome")
@@ -111,6 +130,29 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
             return ShowSessionDetailSerializer
 
         return ShowSessionSerializer
+
+    # only for documentation
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "date",
+                type=datetime,
+                description="Filter by date(ex. ?date=2012-11-03)"
+            ),
+            OpenApiParameter(
+                "astronomy_show",
+                type=int,
+                description="Filter by astronomy show id (ex. ?astronomy_show=1)",
+            ),
+            OpenApiParameter(
+                "planetarium_dome",
+                type=int,
+                description="Filter by planetarium dome id (ex. ?planetarium_dome=1)",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class ReservationViewSet(viewsets.ModelViewSet):
