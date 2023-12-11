@@ -135,8 +135,8 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Cinema API Service",
-    "DESCRIPTION": "API for managing cinema",
+    "TITLE": "Planetarium API Service",
+    "DESCRIPTION": "API for managing planetarium",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "SWAGGER_UI_SETTINGS": {
