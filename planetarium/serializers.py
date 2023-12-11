@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import PlanetariumDome, ShowTheme, AstronomyShow
+from .models import PlanetariumDome, ShowTheme, AstronomyShow, ShowSession
 
 
 class PlanetariumDomeSerializer(serializers.ModelSerializer):
@@ -34,3 +34,34 @@ class AstronomyShowListSerializer(AstronomyShowSerializer):
 
 class AstronomyShowDetailSerializer(AstronomyShowSerializer):
     show_theme = ShowThemeSerializer(many=True, read_only=True)
+
+
+class ShowSessionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ShowSession
+        fields = ("id", "astronomy_show", "planetarium_dome", "show_time")
+
+
+class ShowSessionListSerializer(ShowSessionSerializer):
+    astronomy_show = serializers.SlugRelatedField(
+        many=False,
+        read_only=True,
+        slug_field="title"
+    )
+    planetarium_dome = serializers.SlugRelatedField(
+        many=False,
+        read_only=True,
+        slug_field="name"
+    )
+
+
+class ShowSessionDetailSerializer(ShowSessionSerializer):
+    astronomy_show = AstronomyShowListSerializer(
+        many=False,
+        read_only=True,
+    )
+    planetarium_dome = PlanetariumDomeSerializer(
+        many=False,
+        read_only=True,
+    )
