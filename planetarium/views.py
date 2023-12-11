@@ -1,9 +1,9 @@
 from rest_framework import viewsets, mixins
 
-from .models import PlanetariumDome, ShowTheme, AstronomyShow, ShowSession
+from .models import PlanetariumDome, ShowTheme, AstronomyShow, ShowSession, Reservation
 from .serializers import PlanetariumDomeSerializer, ShowThemeSerializer, AstronomyShowSerializer, \
     AstronomyShowListSerializer, AstronomyShowDetailSerializer, ShowSessionSerializer, ShowSessionDetailSerializer, \
-    ShowSessionListSerializer
+    ShowSessionListSerializer, ReservationSerializer, ReservationListSerializer
 
 
 class PlanetariumDomeViewSet(
@@ -50,3 +50,21 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
             return ShowSessionDetailSerializer
 
         return ShowSessionSerializer
+
+
+class ReservationViewSet(viewsets.ModelViewSet):
+    queryset = Reservation.objects.prefetch_related("tickets")
+    serializer_class = ReservationSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        return queryset.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return ReservationListSerializer
+
+        return ReservationSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
