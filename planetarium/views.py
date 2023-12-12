@@ -155,7 +155,11 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
         return super().list(request, *args, **kwargs)
 
 
-class ReservationViewSet(viewsets.ModelViewSet):
+class ReservationViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
     queryset = Reservation.objects.prefetch_related("tickets")
     serializer_class = ReservationSerializer
     permission_classes = (IsAuthenticated, )
