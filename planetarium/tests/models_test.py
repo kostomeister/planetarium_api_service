@@ -13,6 +13,10 @@ from planetarium.models import (
 )
 
 
+def sample_user():
+    return get_user_model().objects.create_user(email="test@gmail.com", password="123321")
+
+
 class PlanetariumDomeTest(TestCase):
     def test_capacity_calculation(self):
         dome = PlanetariumDome.objects.create(name="Test Dome", rows=5, seats_in_row=10)
@@ -33,7 +37,7 @@ class AstronomyShowTest(TestCase):
 
 class ReservationTest(TestCase):
     def test_str_representation(self):
-        user = get_user_model().objects.create_user(username="test", password="123321")
+        user = sample_user()
         reservation = Reservation.objects.create(user=user)
         self.assertEqual(
             str(reservation),
@@ -51,7 +55,7 @@ class ShowSessionTest(TestCase):
         )
 
     def test_tickets_available_calculation(self):
-        user = get_user_model().objects.create_user(username="test", password="123321")
+        user = sample_user()
         reservation = Reservation.objects.create(user=user, created_at=datetime.datetime.now())
         Ticket.objects.create(row=1, seat=1, show_session=self.session, reservation=reservation)
         self.assertEqual(self.session.tickets_available, self.dome.capacity - 1)
@@ -71,7 +75,7 @@ class TicketTest(TestCase):
         self.session = ShowSession.objects.create(
             astronomy_show=self.show, planetarium_dome=self.dome, show_time="2023-12-31T12:00:00Z"
         )
-        self.user = get_user_model().objects.create_user(username="test_user", password="test_password")
+        self.user = sample_user()
 
     def test_validate_ticket_success(self):
         Ticket.validate_ticket(row=1, seat=1, planetarium_dome=self.dome, error_to_raise=ValidationError)

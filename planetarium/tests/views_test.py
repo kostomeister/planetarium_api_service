@@ -14,13 +14,13 @@ from planetarium.models import (
 
 def sample_admin():
     return get_user_model().objects.create_user(
-        username='admin', password='admin', is_staff=True
+        email='admin@gmail.com', password='admin', is_staff=True
     )
 
 
 def sample_user():
     return get_user_model().objects.create_user(
-        username="test", password="test"
+        email="test@gmail.com", password="test"
     )
 
 
