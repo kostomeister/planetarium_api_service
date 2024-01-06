@@ -47,8 +47,6 @@ class ShowThemeViewSet(
 
 
 class AstronomyShowViewSet(viewsets.ModelViewSet):
-    queryset = AstronomyShow.objects.prefetch_related("show_theme")
-    serializer_class = AstronomyShowSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly, )
 
     @staticmethod
@@ -59,7 +57,7 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
         title = self.request.query_params.get("title")
         show_themes = self.request.query_params.get("show_theme")
 
-        queryset = self.queryset
+        queryset = AstronomyShow.objects.prefetch_related("show_theme")
 
         if title:
             queryset = queryset.filter(title__icontains=title)
@@ -99,8 +97,6 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
 
 
 class ShowSessionViewSet(viewsets.ModelViewSet):
-    queryset = ShowSession.objects.select_related("astronomy_show", "planetarium_dome")
-    serializer_class = ShowSessionSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly, )
 
     def get_queryset(self):
@@ -108,7 +104,7 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
         astronomy_show = self.request.query_params.get("show_theme")
         planetarium_dome = self.request.query_params.get("planetarium_dome")
 
-        queryset = self.queryset
+        queryset = ShowSession.objects.select_related("astronomy_show", "planetarium_dome")
 
         if date:
             date = datetime.strptime(date, "%Y-%m-%d").date()
@@ -160,12 +156,10 @@ class ReservationViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = Reservation.objects.prefetch_related("tickets")
-    serializer_class = ReservationSerializer
     permission_classes = (IsAuthenticated, )
 
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = Reservation.objects.prefetch_related("tickets")
         return queryset.filter(user=self.request.user)
 
     def get_serializer_class(self):
